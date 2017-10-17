@@ -79,7 +79,7 @@ namespace MonoDevelop.UnitTesting
 
 		public override UnitTestResult GetLastResult ()
 		{
-			var results = Tests.Select (tst => tst.GetLastResult ());
+			var results = Tests.Select (tst => tst.GetLastResult ()).ToList ();
 			var passed = results.Sum (t => t.Passed);
 			var errors = results.Sum (t => t.Errors);
 			var failures = results.Sum (t => t.Failures);
