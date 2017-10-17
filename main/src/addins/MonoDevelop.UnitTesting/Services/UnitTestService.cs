@@ -105,7 +105,11 @@ namespace MonoDevelop.UnitTesting
 		public static AsyncOperation RunTest (UnitTest test, MonoDevelop.Projects.ExecutionContext context)
 		{
 			var result = RunTest (test, context, IdeApp.Preferences.BuildBeforeRunningTests);
-			result.Task.ContinueWith (t => OnTestSessionCompleted (), TaskScheduler.FromCurrentSynchronizationContext ());
+			result.Task.ContinueWith (t => {
+											 RefreshResult (test?.Parent);
+											 OnTestSessionCompleted ();
+											},
+			                          TaskScheduler.FromCurrentSynchronizationContext ());
 			return result;
 		}
 		
@@ -185,7 +189,14 @@ namespace MonoDevelop.UnitTesting
 		public static AsyncOperation RunTests (IEnumerable<UnitTest> tests, MonoDevelop.Projects.ExecutionContext context)
 		{
 			var result = RunTests (tests, context, IdeApp.Preferences.BuildBeforeRunningTests);
-			result.Task.ContinueWith (t => OnTestSessionCompleted (), TaskScheduler.FromCurrentSynchronizationContext ());
+			result.Task.ContinueWith (t => { 
+											  tests.Select (tst => tst?.Parent)
+				                                   .Where (pr => pr !=null)
+				                                   .ToList ()
+				                                   .ForEach (RefreshResult);
+											   OnTestSessionCompleted ();
+											}, 
+			                          TaskScheduler.FromCurrentSynchronizationContext ());
 			return result;
 		}
 
@@ -405,9 +416,9 @@ namespace MonoDevelop.UnitTesting
 			test?.ResetLastResult ();
 		}
 
-		internal static void RefreshResult (UnitTest rootTest)
+		internal static void RefreshResult (UnitTest test)
 		{
-			rootTest?.RefreshResult ();
+			test?.RefreshResult ();
 		}
 
 		public static event EventHandler TestSuiteChanged;

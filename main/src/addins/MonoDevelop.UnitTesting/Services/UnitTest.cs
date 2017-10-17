@@ -44,8 +44,8 @@ namespace MonoDevelop.UnitTesting
 	{
 		string name;
 		IResultsStore resultsStore;
-		UnitTestResult lastResult;
-		UnitTest parent;
+		protected UnitTestResult lastResult;
+		UnitTestGroup parent;
 		TestStatus status;
 		WorkspaceObject ownerSolutionItem;
 		SolutionItem ownerSolutionEntityItem;
@@ -88,7 +88,7 @@ namespace MonoDevelop.UnitTesting
 				ownerSolutionEntityItem.DefaultConfigurationChanged -= OnConfugurationChanged;
 		}
 		
-		internal void SetParent (UnitTest t)
+		internal void SetParent (UnitTestGroup t)
 		{
 			parent = t;
 		}
@@ -172,7 +172,7 @@ namespace MonoDevelop.UnitTesting
 			get { return null; }
 		}
 		
-		public UnitTest Parent {
+		public UnitTestGroup Parent {
 			get { return parent; }
 		}
 		
@@ -193,7 +193,7 @@ namespace MonoDevelop.UnitTesting
 			get { return Name; }
 		}
 		
-		public TestStatus Status {
+		public virtual TestStatus Status {
 			get { return status; }
 			set {
 				status = value;

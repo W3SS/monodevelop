@@ -45,7 +45,7 @@ namespace MonoDevelop.UnitTesting
 		string output;
 		string stackTrace;
 		string cerror;
-		
+
 		public UnitTestResult ()
 		{
 		}
@@ -223,6 +223,35 @@ namespace MonoDevelop.UnitTesting
 			Ignored += res.Ignored;
 			Inconclusive += res.Inconclusive;
 			Skipped += res.Skipped;
+		}
+
+		public override int GetHashCode ()
+		{
+			var unknowObject = new {
+				Status,
+				IsFailure,
+				IsSuccess,
+				IsInconclusive,
+				IsNotRun,
+				Passed,
+				Errors,
+				Failures,
+				ErrorsAndFailures,
+				TestsNotRun,
+				Inconclusive,
+				NotRunnable,
+				Skipped,
+				Ignored
+			};
+			return unknowObject.GetHashCode ();
+		}
+
+		public override bool Equals (object obj)
+		{
+			var unitTestResult =  obj as UnitTestResult;
+			if (unitTestResult == null)
+				return false;
+			return GetHashCode () == unitTestResult.GetHashCode ();
 		}
 	}
 }

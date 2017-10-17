@@ -355,10 +355,7 @@ namespace MonoDevelop.UnitTesting
 			
 			foreach (UnitTest t in UnitTestService.RootTests)
 				TreeView.AddChild (t);
-
-			foreach (UnitTest tst in UnitTestService.RootTests)
-				tst.RefreshResult();
-
+			
 			base.TreeView.Tree.Name = "unitTestBrowserTree";
 		}
 		
@@ -542,8 +539,7 @@ namespace MonoDevelop.UnitTesting
 			if (bringToFront)
 				IdeApp.Workbench.GetPad<TestPad> ().BringToFront ();
 			runningTestOperation = UnitTestService.RunTests (tests, context);
-			var rootTest = tests.FirstOrDefault()?.RootTest;
-			runningTestOperation.Task.ContinueWith (t => OnTestSessionCompleted (rootTest), TaskScheduler.FromCurrentSynchronizationContext ());
+			runningTestOperation.Task.ContinueWith (t => OnTestSessionCompleted (), TaskScheduler.FromCurrentSynchronizationContext ());
 			return runningTestOperation;
 		}
 
@@ -558,9 +554,8 @@ namespace MonoDevelop.UnitTesting
 			RunTests (TreeView.GetSelectedNodes (), mode);
 		}
 
-		private void OnTestSessionCompleted (UnitTest rootTest)
+		private void OnTestSessionCompleted ()
 		{
-			UnitTestService.RefreshResult (rootTest);
 			RefreshDetails ();
 			runningTestOperation = null;
 			this.buttonRunAll.Sensitive = true;

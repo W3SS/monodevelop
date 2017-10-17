@@ -67,6 +67,7 @@ namespace MonoDevelop.UnitTesting
 		{
 			foreach (var test in new List<UnitTest> (Tests))
 				test.RefreshResult ();
+			UpdateStatusFromChildren ();
 			base.RefreshResult ();
 		}
 
@@ -103,6 +104,27 @@ namespace MonoDevelop.UnitTesting
 			};
 
 			return result;
+		}
+
+		internal void UpdateStatusFromChildren ()
+		{
+			var calculatedResult = GetLastResult ();
+			var storedResult = base.GetLastResult ();
+			if(calculatedResult != storedResult){
+				lastResult = calculatedResult;
+				base.RefreshResult ();
+				Parent?.UpdateStatusFromChildren ();
+			}
+		}
+
+		public override TestStatus Status {
+			get {
+				return base.Status;
+			}
+			set {
+				UpdateStatusFromChildren ();
+				base.Status = value;
+			}
 		}
 
 		public UnitTestCollection Tests {
