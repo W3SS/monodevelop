@@ -45,7 +45,7 @@ namespace MonoDevelop.UnitTesting
 		string name;
 		IResultsStore resultsStore;
 		protected UnitTestResult lastResult;
-		UnitTestGroup parent;
+		UnitTest parent;
 		TestStatus status;
 		WorkspaceObject ownerSolutionItem;
 		SolutionItem ownerSolutionEntityItem;
@@ -88,7 +88,7 @@ namespace MonoDevelop.UnitTesting
 				ownerSolutionEntityItem.DefaultConfigurationChanged -= OnConfugurationChanged;
 		}
 		
-		internal void SetParent (UnitTestGroup t)
+		internal void SetParent (UnitTest t)
 		{
 			parent = t;
 		}
@@ -130,7 +130,7 @@ namespace MonoDevelop.UnitTesting
 			}
 		}
 		
-		public virtual UnitTestResult GetLastResult ()
+		public UnitTestResult GetLastResult ()
 		{
 			if (!resultLoaded) {
 				resultLoaded = true;
@@ -144,11 +144,6 @@ namespace MonoDevelop.UnitTesting
 		public virtual void ResetLastResult ()
 		{
 			historicResult = true;
-			OnTestStatusChanged ();
-		}
-
-		public virtual void RefreshResult ()
-		{
 			OnTestStatusChanged ();
 		}
 
@@ -172,7 +167,7 @@ namespace MonoDevelop.UnitTesting
 			get { return null; }
 		}
 		
-		public UnitTestGroup Parent {
+		public UnitTest Parent {
 			get { return parent; }
 		}
 		
@@ -193,11 +188,12 @@ namespace MonoDevelop.UnitTesting
 			get { return Name; }
 		}
 		
-		public virtual TestStatus Status {
+		public TestStatus Status {
 			get { return status; }
 			set {
 				status = value;
 				OnTestStatusChanged ();
+				(Parent as UnitTestGroup)?.UpdateStatusFromChildren ();
 			}
 		}
 
@@ -416,7 +412,7 @@ namespace MonoDevelop.UnitTesting
 			});
 		}
 		
-		protected virtual void OnTestStatusChanged ()
+		public virtual void OnTestStatusChanged ()
 		{
 			Gtk.Application.Invoke ((o, args) => {
 				// Run asynchronously in the UI thread

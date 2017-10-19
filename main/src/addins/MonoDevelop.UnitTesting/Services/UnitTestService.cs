@@ -418,9 +418,10 @@ namespace MonoDevelop.UnitTesting
 
 		internal static void RefreshResult (UnitTest test)
 		{
-			test?.RefreshResult ();
+			(test as UnitTestGroup)?.UpdateStatusFromChildren ();
+			test?.OnTestStatusChanged ();
 		}
-
+			     
 		public static event EventHandler TestSuiteChanged;
 
 		static void OnTestSessionCompleted ()

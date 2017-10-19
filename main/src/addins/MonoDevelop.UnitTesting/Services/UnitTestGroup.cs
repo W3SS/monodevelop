@@ -63,14 +63,6 @@ namespace MonoDevelop.UnitTesting
 			}
 		}
 
-		public override void RefreshResult ()
-		{
-			foreach (var test in new List<UnitTest> (Tests))
-				test.RefreshResult ();
-			UpdateStatusFromChildren ();
-			base.RefreshResult ();
-		}
-
 		public override void ResetLastResult ()
 		{
 			foreach (var t in new List<UnitTest> (Tests))
@@ -78,7 +70,7 @@ namespace MonoDevelop.UnitTesting
 			base.ResetLastResult ();
 		}
 
-		public override UnitTestResult GetLastResult ()
+		public UnitTestResult GetLastResultDynamicaly ()
 		{
 			var results = Tests.Select (tst => tst.GetLastResult ()).ToList ();
 			var passed = results.Sum (t => t.Passed);
@@ -108,25 +100,15 @@ namespace MonoDevelop.UnitTesting
 
 		internal void UpdateStatusFromChildren ()
 		{
-			var calculatedResult = GetLastResult ();
+			var calculatedResult = GetLastResultDynamicaly ();
 			var storedResult = base.GetLastResult ();
 			if(calculatedResult != storedResult){
 				lastResult = calculatedResult;
-				base.RefreshResult ();
-				Parent?.UpdateStatusFromChildren ();
+				OnTestStatusChanged ();
+				(Parent as UnitTestGroup)?.UpdateStatusFromChildren ();
 			}
 		}
-
-		public override TestStatus Status {
-			get {
-				return base.Status;
-			}
-			set {
-				UpdateStatusFromChildren ();
-				base.Status = value;
-			}
-		}
-
+			
 		public UnitTestCollection Tests {
 			get {
 				if (tests == null) {
