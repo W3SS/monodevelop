@@ -1,7 +1,6 @@
 <Project>
 
   <PropertyGroup>
-    <NuGetVersionVSEditor>15.3.1710.203</NuGetVersionVSEditor>
     <ReferencesVSEditorCopyToOutput Condition="$(ReferencesVSEditorCopyToOutput) == ''">false</ReferencesVSEditorCopyToOutput>
   </PropertyGroup>
 

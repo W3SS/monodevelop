@@ -1,7 +1,6 @@
 <Project>
 
   <PropertyGroup>
-    <NuGetVersionRoslyn>2.6.0-vs-for-mac-62217-03</NuGetVersionRoslyn>
     <ReferencesRoslynCopyToOutput Condition="$(ReferencesRoslynCopyToOutput) == ''">false</ReferencesRoslynCopyToOutput>
   </PropertyGroup>
 
