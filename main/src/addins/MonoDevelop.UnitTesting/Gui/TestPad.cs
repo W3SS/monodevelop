@@ -530,7 +530,7 @@ namespace MonoDevelop.UnitTesting
 		{
 			foreach (var test in tests)
 				UnitTestService.ResetResult (test.RootTest);
-
+				
 			this.buttonRunAll.Sensitive = false;
 			this.buttonStop.Sensitive = true;
 
@@ -553,14 +553,15 @@ namespace MonoDevelop.UnitTesting
 		{
 			RunTests (TreeView.GetSelectedNodes (), mode);
 		}
-
-		private void OnTestSessionCompleted ()
+		
+		void OnTestSessionCompleted ()
 		{
 			RefreshDetails ();
 			runningTestOperation = null;
 			this.buttonRunAll.Sensitive = true;
 			this.buttonStop.Sensitive = false;
 		}
+
 	
 		protected override void OnSelectionChanged (object sender, EventArgs args)
 		{
