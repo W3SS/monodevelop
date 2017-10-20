@@ -102,7 +102,7 @@ namespace MonoDevelop.UnitTesting
 		{
 			var calculatedResult = GetLastResultDynamicaly ();
 			var storedResult = base.GetLastResult ();
-			if(calculatedResult != storedResult){
+			if(!calculatedResult.Equals (storedResult)){
 				lastResult = calculatedResult;
 				OnTestStatusChanged ();
 				(Parent as UnitTestGroup)?.UpdateStatusFromChildren ();

@@ -105,11 +105,7 @@ namespace MonoDevelop.UnitTesting
 		public static AsyncOperation RunTest (UnitTest test, MonoDevelop.Projects.ExecutionContext context)
 		{
 			var result = RunTest (test, context, IdeApp.Preferences.BuildBeforeRunningTests);
-			result.Task.ContinueWith (t => {
-											 RefreshResult (test?.Parent);
-											 OnTestSessionCompleted ();
-											},
-			                          TaskScheduler.FromCurrentSynchronizationContext ());
+			result.Task.ContinueWith (t => OnTestSessionCompleted (), TaskScheduler.FromCurrentSynchronizationContext ());
 			return result;
 		}
 		
